@@ -1,7 +1,6 @@
 import { server } from "../..";
 import chai from "chai";
 import chaiHttp = require("chai-http");
-import "mocha";
 import { loadFakeData } from "../../src/services/main";
 
 chai.use(chaiHttp);
