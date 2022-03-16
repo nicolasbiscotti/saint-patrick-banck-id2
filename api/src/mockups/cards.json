@@ -1,0 +1,25 @@
+{
+  "cards": [
+    {
+      "CARD_NUMBER": "4546-8574-1856-5565",
+      "PIN": "4345",
+      "SALDO_INICIAL": 40555
+    },
+
+    {
+      "CARD_NUMBER": "5595-3458-9989-7125",
+      "PIN": "1595",
+      "SALDO_INICIAL": 3566
+    },
+
+    { "CARD_NUMBER": "4858-6696-5887-1578", "PIN": "1234", "SALDO_INICIAL": 23 },
+
+    { "CARD_NUMBER": "5854-6656-2587-1547", "PIN": "4345", "SALDO_INICIAL": 300 },
+
+    {
+      "CARD_NUMBER": "4546-9896-2357-1478",
+      "PIN": "0023",
+      "SALDO_INICIAL": 35621
+    }
+  ]
+}
