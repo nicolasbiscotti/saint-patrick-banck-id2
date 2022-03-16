@@ -2,8 +2,15 @@ import { card, CardObject, CardSpec } from "./card";
 import { transaction } from "./transaction";
 import { user, UserObject, UserSpec } from "./user";
 
-export const users: UserObject[] = [];
-export const cards: CardObject[] = [];
+export let users: UserObject[] = [];
+export let cards: CardObject[] = [];
+
+export const reset = () => {
+  users = [];
+  cards = [];
+}
+export const listUsers = () => users;
+export const listCards = () => cards;
 
 export const makeNewTransaction = (
   origin: CardObject,
@@ -49,3 +56,29 @@ export const assignCard = ({
     return newCard;
   }
 };
+
+export const loadFakeData = () => {
+  const nicolas = createUser({name: "Nicolás Biscotti"});
+  const fer = createUser({name: "Fer Fauret"});
+  const cardOne = assignCard({
+    cardNumber: "4546-8574-1856-5565",
+    pin: 4345,
+    initialBalance: 40555,
+    cardHolder: nicolas,
+  });
+  const cardTwo = assignCard({
+    cardNumber: "5595-3458-9989-7125",
+    pin: 1595,
+    initialBalance: 3566,
+    cardHolder: fer,
+  });
+  const cardThree = assignCard({
+    cardNumber: "4858-6696-5887-1578",
+    pin: 1234,
+    initialBalance: 23,
+    cardHolder: nicolas,
+  });
+  if (cardOne) {
+    makeNewTransaction(cardOne, "5595-3458-9989-7125", 3000);
+  }
+}
