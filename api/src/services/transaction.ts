@@ -5,10 +5,10 @@ export interface TransactionSpec {
   receiver: CardObject;
   amount: number;
   type: "credit" | "debit";
+  transactionCode: string;
 }
 export interface TransactionObject extends TransactionSpec {
   getDate: () => string;
-  getTransactionCode: () => string;
 }
 
 export const transaction = function ({
@@ -16,20 +16,19 @@ export const transaction = function ({
   receiver,
   amount,
   type,
+  transactionCode,
 }: TransactionSpec) {
   const date = Date();
-  const transactionCode = Math.floor(Math.random() * 10000).toString();
 
   const getDate = () => date;
-  const getTransactionCode = () => transactionCode;
 
   const that: TransactionObject = {
     origin,
     receiver,
     amount,
     type,
+    transactionCode,
     getDate,
-    getTransactionCode,
   };
 
   return that;

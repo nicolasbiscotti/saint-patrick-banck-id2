@@ -1,6 +1,15 @@
 import { card, CardObject, CardSpec } from "./card";
 import { transaction } from "./transaction";
 import { user, UserObject, UserSpec } from "./user";
+import { v4 as uuidv4 } from "uuid";
+import fakeUsers from "../mockups/users.json";
+import fakeCards from "../mockups/cards.json";
+
+interface newTransactionSpec {
+  origin: CardObject;
+  receiverNumber: string;
+  amount: number;
+}
 
 export let users: UserObject[] = [];
 export let cards: CardObject[] = [];
@@ -8,25 +17,58 @@ export let cards: CardObject[] = [];
 export const reset = () => {
   users = [];
   cards = [];
-}
-export const listUsers = () => users;
-export const listCards = () => cards;
+};
+export const userList = () => users;
+export const cardsList = () => cards;
 
-export const makeNewTransaction = (
-  origin: CardObject,
-  receiverNumber: string,
-  amount: number
-): boolean => {
-  const receiver = cards.find((card) => card.cardNumber === receiverNumber);
+export const findCardByNumber = (cardNumber: string) => {
+  return cards.find((card) => card.cardNumber === cardNumber);
+};
+export const findUserByName = (userName: string) => {
+  return users.find((user) => user.name === userName);
+};
+const findCardByNumberAndPin = (cardNumber: string, pin: string) => {
+  return cards.find(
+    (card) => card.cardNumber === cardNumber && card.pin === pin
+  );
+};
+export const login = (cardNumber: string, pin: string) => {
+  const validCard = findCardByNumberAndPin(cardNumber, pin);
+  if (!validCard) {
+    return undefined;
+  } else {
+    return validCard.cardHolder;
+  }
+};
+
+export const makeNewTransaction = ({
+  origin,
+  receiverNumber,
+  amount,
+}: newTransactionSpec): boolean => {
+  const receiver = findCardByNumber(receiverNumber);
   if (!receiver) {
     return false;
   } else {
     if (origin.getBalance() >= amount) {
+      const transactionCode = uuidv4();
       origin.addTransaction(
-        transaction({ origin, receiver, amount, type: "debit" })
+        transaction({
+          origin,
+          receiver,
+          amount,
+          type: "debit",
+          transactionCode,
+        })
       );
       receiver.addTransaction(
-        transaction({ origin, receiver, amount, type: "credit" })
+        transaction({
+          origin,
+          receiver,
+          amount,
+          type: "credit",
+          transactionCode,
+        })
       );
       return true;
     }
@@ -34,8 +76,8 @@ export const makeNewTransaction = (
   }
 };
 
-export const createUser = ({name}: UserSpec) => {
-  const newUser = user({name});
+export const createUser = ({ name }: UserSpec) => {
+  const newUser = user({ name });
   users.push(newUser);
   return newUser;
 };
@@ -47,7 +89,7 @@ export const assignCard = ({
   cardHolder,
 }: CardSpec) => {
   let newCard = null;
-  const holder = users.find((user) => user.name === cardHolder.name);
+  const holder = findUserByName(cardHolder.name);
   if (!holder) {
     return newCard;
   } else {
@@ -58,27 +100,10 @@ export const assignCard = ({
 };
 
 export const loadFakeData = () => {
-  const nicolas = createUser({name: "Nicolás Biscotti"});
-  const fer = createUser({name: "Fer Fauret"});
-  const cardOne = assignCard({
-    cardNumber: "4546-8574-1856-5565",
-    pin: 4345,
-    initialBalance: 40555,
-    cardHolder: nicolas,
-  });
-  const cardTwo = assignCard({
-    cardNumber: "5595-3458-9989-7125",
-    pin: 1595,
-    initialBalance: 3566,
-    cardHolder: fer,
-  });
-  const cardThree = assignCard({
-    cardNumber: "4858-6696-5887-1578",
-    pin: 1234,
-    initialBalance: 23,
-    cardHolder: nicolas,
-  });
-  if (cardOne) {
-    makeNewTransaction(cardOne, "5595-3458-9989-7125", 3000);
+  fakeUsers.forEach((user) => createUser(user));
+
+  for (let index = 0; index < fakeCards.length; index++) {
+    const card = fakeCards[index];
+    assignCard({ ...card, cardHolder: users[index % users.length] });
   }
-}
+};

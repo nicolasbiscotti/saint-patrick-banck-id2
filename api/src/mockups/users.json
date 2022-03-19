@@ -1,7 +1,5 @@
-{
-  "users": [
-    { "name": "Nicolás Biscotti" },
-    { "name": "Fernanda Fauret" },
-    { "name": "Edwin Ortiz" }
-  ]
-}
+[
+  { "name": "Nicolás Biscotti" },
+  { "name": "Fernanda Fauret" },
+  { "name": "Edwin Ortiz" }
+]
