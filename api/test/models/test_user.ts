@@ -1,18 +1,17 @@
 import { expect } from "chai";
 import assert from "assert";
-import { CardObject } from "../../src/services/card";
+
 import {
   assignCard,
   createUser,
-  listCards,
-  listUsers,
   reset,
+  userList,
 } from "../../src/services/main";
 import { UserObject } from "../../src/services/user";
 
-beforeEach(() => reset());
+describe("User", () => {
+  beforeEach(() => reset());
 
-describe("user", () => {
   it("should pass", () => {
     assert(true, "reason");
   });
@@ -22,15 +21,13 @@ describe("user", () => {
     const expected: UserObject[] = [];
 
     // act
-    createUser({ name: "Nicolas" });
-    const actual = listUsers();
+    const actual = userList();
 
     // assert
-    expect(actual).to.have.length(1);
-    expect(actual[0].getCards()).to.have.length(0);
+    expect(actual).to.have.length(expected.length);
   });
 
-  it("shoul return an user calls Nicolás Biscotti", () => {
+  it("shoul return an user calls Nicolás Biscotti with no cards", () => {
     // arrange
     const name = "Nicolás Biscotti";
     const expected = name;
@@ -40,28 +37,29 @@ describe("user", () => {
 
     // assert
     expect(actual.name).to.equal(expected);
+    expect(userList()).to.have.length(1);
+    expect(actual.getCards()).to.have.length(0);
   });
 
-  it("shoul return card number ", () => {
+  it("Nicolás Biscotti shoud have a card ", () => {
     // arrange
     const name = "Nicolás Biscotti";
     const expected = {
       cardNumber: "4546-8574-1856-5565",
-      pin: 4345,
+      pin: "4345",
       initialBalance: 40555,
     };
 
     // act
     const nicolas = createUser({ name });
     assignCard({
-      cardNumber: "4546-8574-1856-5565",
-      pin: 4345,
-      initialBalance: 40555,
+      ...expected,
       cardHolder: nicolas,
     });
-    const actual = nicolas.getCards()[0].cardNumber;
+    const actual = nicolas;
 
     // assert
-    expect(actual).to.equal(expected.cardNumber);
+    expect(actual.getCards()[0].cardNumber).to.equal(expected.cardNumber);
+    expect(actual.getCards()).to.have.length(1);
   });
 });

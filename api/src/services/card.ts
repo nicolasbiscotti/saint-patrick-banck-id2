@@ -3,7 +3,7 @@ import { UserObject } from "./user";
 
 export interface CardSpec {
   cardNumber: string;
-  pin: number;
+  pin: string;
   initialBalance: number;
   cardHolder: UserObject;
 }
